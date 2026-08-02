@@ -1,0 +1,20 @@
+# Local environment configuration and credentials.
+wp-config.php
+
+# Database exports can contain site data and credentials.
+*.sql
+*.sql.gz
+
+# Machine-specific and archive artifacts.
+.DS_Store
+__MACOSX/
+
+# Generated WordPress content and runtime caches.
+wp-content/uploads/
+wp-content/cache/
+wp-content/wflogs/
+wp-content/upgrade/
+
+# Logs and temporary files.
+*.log
+*.tmp

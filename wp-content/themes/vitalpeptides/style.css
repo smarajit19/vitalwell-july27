@@ -1,0 +1,19 @@
+/*
+Theme Name: Vital Peptides
+Theme URI: https://vitalpeptidesciences.com
+Author: Vital Peptides
+Author URI: https://vitalpeptidesciences.com
+Description: Pixel-accurate WooCommerce theme replicating the Vital Peptides React storefront. Fully responsive, custom AJAX cart drawer, custom shop and product layouts.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: vitalpeptides
+Tags: e-commerce, woocommerce, custom-colors, custom-menu, featured-images
+WC requires at least: 7.0
+WC tested up to: 9.5
+*/
+
+/* All theme styles are enqueued from assets/css/main.css */
