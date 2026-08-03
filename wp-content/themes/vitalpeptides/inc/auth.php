@@ -28,9 +28,19 @@ add_filter( 'pre_option_woocommerce_enable_myaccount_registration', function () 
 function vp_auth_url( $view = 'login', $redirect = '' ) {
 	$args = array( 'view' => $view );
 	if ( $redirect ) {
-		$args['redirect_to'] = rawurlencode( $redirect );
+		// add_query_arg() encodes query values itself. Encoding here as well
+		// produces a malformed redirect URL after the signup form is submitted.
+		$args['redirect_to'] = $redirect;
 	}
 	return add_query_arg( $args, home_url( '/auth/' ) );
+}
+
+/**
+ * Return only a safe, same-site destination after authentication.
+ */
+function vp_auth_redirect_target( $redirect = '' ) {
+	$default = wc_get_page_permalink( 'myaccount' );
+	return wp_validate_redirect( $redirect, $default ? $default : home_url( '/' ) );
 }
 
 /**
@@ -69,10 +79,7 @@ function vp_process_auth() {
 		return;
 	}
 	$action   = sanitize_text_field( wp_unslash( $_POST['vp_auth_action'] ) );
-	$redirect = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : '';
-	if ( ! $redirect ) {
-		$redirect = wc_get_page_permalink( 'myaccount' );
-	}
+	$redirect = isset( $_POST['redirect_to'] ) ? vp_auth_redirect_target( esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) ) : vp_auth_redirect_target();
 
 	// -------- Sign up --------
 	if ( 'signup' === $action ) {
@@ -109,8 +116,7 @@ function vp_process_auth() {
 		}
 
 		wc_set_customer_auth_cookie( $customer_id );
-		wp_safe_redirect( $redirect );
-		exit;
+		vp_email_otp_start( $customer_id, $redirect );
 	}
 
 	// -------- Log in --------
@@ -131,8 +137,7 @@ function vp_process_auth() {
 			wp_safe_redirect( vp_auth_url( 'login', $redirect ) );
 			exit;
 		}
-		wp_safe_redirect( $redirect );
-		exit;
+		vp_email_otp_start( $user->ID, $redirect );
 	}
 }
 
@@ -142,8 +147,8 @@ function vp_process_auth() {
 add_action( 'template_redirect', 'vp_auth_redirect_logged_in' );
 function vp_auth_redirect_logged_in() {
 	if ( is_page( 'auth' ) && is_user_logged_in() ) {
-		$redirect = isset( $_GET['redirect_to'] ) ? esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) : wc_get_page_permalink( 'myaccount' ); // phpcs:ignore WordPress.Security.NonceVerification
-		wp_safe_redirect( $redirect ? $redirect : home_url( '/' ) );
+		$redirect = isset( $_GET['redirect_to'] ) ? vp_auth_redirect_target( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) ) : vp_auth_redirect_target(); // phpcs:ignore WordPress.Security.NonceVerification
+		wp_safe_redirect( vp_email_otp_session_is_verified() ? $redirect : vp_email_otp_page_url( $redirect ) );
 		exit;
 	}
 }

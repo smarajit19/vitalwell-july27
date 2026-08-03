@@ -18,7 +18,7 @@ do_action( 'woocommerce_before_checkout_form', $checkout );
 // If checkout registration is disabled and not logged in, the user cannot checkout.
 if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_required() && ! is_user_logged_in() ) {
 	$vp_auth_url  = home_url( '/auth/' );
-	$vp_redirect  = rawurlencode( wc_get_checkout_url() );
+	$vp_redirect  = wc_get_checkout_url();
 	$vp_login_url = add_query_arg( array( 'view' => 'login', 'redirect_to' => $vp_redirect ), $vp_auth_url );
 	$vp_signup_url = add_query_arg( array( 'view' => 'signup', 'redirect_to' => $vp_redirect ), $vp_auth_url );
 	?>

@@ -15,6 +15,7 @@ define( 'VP_THEME_URI', get_template_directory_uri() );
  * ------------------------------------------------------------------------ */
 require_once get_template_directory() . '/inc/compliance.php';
 require_once get_template_directory() . '/inc/auth.php';
+require_once get_template_directory() . '/inc/email-otp.php';
 
 /* --------------------------------------------------------------------------
  * Setup
@@ -321,7 +322,13 @@ function vp_cart_drawer_content() {
 					<span><?php esc_html_e( 'Subtotal', 'vitalpeptides' ); ?></span>
 					<strong><?php echo wp_kses_post( wc_price( $cart->get_subtotal() ) ); ?></strong>
 				</div>
-				<a href="<?php echo esc_url( wc_get_checkout_url() ); ?>" class="vp-btn vp-btn--primary vp-drawer-checkout"><?php esc_html_e( 'Checkout', 'vitalpeptides' ); ?></a>
+				<?php
+				$vp_checkout_url = wc_get_checkout_url();
+				$vp_checkout_url = ! is_user_logged_in() && function_exists( 'vp_auth_url' )
+					? vp_auth_url( 'signup', $vp_checkout_url )
+					: $vp_checkout_url;
+				?>
+				<a href="<?php echo esc_url( $vp_checkout_url ); ?>" class="vp-btn vp-btn--primary vp-drawer-checkout"><?php esc_html_e( 'Checkout', 'vitalpeptides' ); ?></a>
 				<p class="vp-drawer-shipping-note"><?php esc_html_e( 'Free shipping on orders over $150', 'vitalpeptides' ); ?></p>
 			</div>
 		<?php endif; ?>
