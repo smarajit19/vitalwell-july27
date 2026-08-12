@@ -1,0 +1,119 @@
+.vp-retriever-terms {
+	--ink: #162335;
+	--muted: #66717e;
+	--line: #d8dee6;
+	--soft: #f5f7fa;
+	--warn: #fff4cf;
+	--accent: #244b76;
+	background: #fff;
+	color: var(--ink);
+	font-family: Inter, Arial, sans-serif;
+	line-height: 1.58;
+}
+
+.vp-retriever-terms,
+.vp-retriever-terms * {
+	box-sizing: border-box;
+}
+
+.vp-retriever-terms .wrap {
+	max-width: 920px;
+	margin: 0 auto;
+	padding: 48px 28px 80px;
+}
+
+.vp-retriever-terms h1 {
+	font-size: 2.25rem;
+	line-height: 1.15;
+	margin: 0 0 10px;
+}
+
+.vp-retriever-terms h2 {
+	font-size: 1.35rem;
+	line-height: 1.25;
+	margin: 2.25rem 0 0.25rem;
+	color: var(--accent);
+}
+
+.vp-retriever-terms .meta {
+	color: var(--muted);
+	margin-bottom: 28px;
+}
+
+.vp-retriever-terms .notice {
+	background: var(--warn);
+	border: 1px solid #e3c96c;
+	border-radius: 10px;
+	margin: 24px 0;
+	padding: 18px 20px;
+}
+
+.vp-retriever-terms .summary {
+	color: var(--muted);
+	font-style: italic;
+	margin: 0.2rem 0 0.8rem;
+}
+
+.vp-retriever-terms .toc {
+	background: var(--soft);
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	margin: 28px 0 38px;
+	padding: 22px 26px;
+}
+
+.vp-retriever-terms .toc ol {
+	columns: 2;
+	column-gap: 36px;
+	padding-left: 22px;
+}
+
+.vp-retriever-terms .toc li {
+	break-inside: avoid;
+	margin: 0.3rem 0;
+}
+
+.vp-retriever-terms .toc a {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+.vp-retriever-terms .toc a:hover {
+	text-decoration: underline;
+}
+
+.vp-retriever-terms p {
+	margin: 0.55rem 0 1rem;
+}
+
+.vp-retriever-terms .caps {
+	font-weight: 700;
+}
+
+.vp-retriever-terms .placeholder {
+	background: #fff09a;
+	border-radius: 2px;
+	padding: 0 0.2em;
+}
+
+.vp-retriever-terms .footer {
+	border-top: 1px solid var(--line);
+	color: var(--muted);
+	font-size: 0.9rem;
+	margin-top: 56px;
+	padding-top: 18px;
+}
+
+@media (max-width: 700px) {
+	.vp-retriever-terms .wrap {
+		padding: 28px 18px 60px;
+	}
+
+	.vp-retriever-terms .toc ol {
+		columns: 1;
+	}
+
+	.vp-retriever-terms h1 {
+		font-size: 1.85rem;
+	}
+}

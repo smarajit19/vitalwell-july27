@@ -1,49 +1,44 @@
 <?php
 /**
- * Terms of Service page — replicates pages/TermsOfService.tsx.
+ * Terms of Service page.
+ *
+ * The approved terms are maintained as a standalone source document. This
+ * template renders its main content inside the active WordPress theme so the
+ * site header, navigation, footer, and WordPress hooks remain available.
  *
  * @package VitalPeptides
  */
 
 defined( 'ABSPATH' ) || exit;
 
+$vp_terms_style_path = get_template_directory() . '/assets/css/retriever-pay-terms.css';
+
+wp_enqueue_style(
+	'vp-retriever-pay-terms',
+	get_template_directory_uri() . '/assets/css/retriever-pay-terms.css',
+	array( 'vp-main' ),
+	file_exists( $vp_terms_style_path ) ? filemtime( $vp_terms_style_path ) : null
+);
+
 get_header();
 
-vp_page_hero(
-	__( 'Terms of Service', 'vitalpeptides' ),
-	__( 'Last updated: February 2026', 'vitalpeptides' )
-);
+$vp_terms_source_path = get_template_directory() . '/assets/legal/retriever-pay-terms.html';
+$vp_terms_document    = is_readable( $vp_terms_source_path ) ? file_get_contents( $vp_terms_source_path ) : false;
+$vp_terms_markup      = '';
 
-$vp_sections = array(
-	array( 'title' => __( 'Acceptance of Terms', 'vitalpeptides' ), 'content' => __( 'By accessing and using the Vital Peptides website and services, you agree to be bound by these Terms of Service. If you do not agree, please do not use our services.', 'vitalpeptides' ) ),
-	array( 'title' => __( 'Research Use Only', 'vitalpeptides' ), 'content' => __( 'All products sold by Vital Peptides are intended strictly for laboratory research purposes. They are not approved for human consumption, therapeutic use, veterinary use, or any clinical applications. By purchasing, you confirm that products will be used solely for legitimate research.', 'vitalpeptides' ) ),
-	array( 'title' => __( 'Account Responsibilities', 'vitalpeptides' ), 'content' => __( 'You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account. You must provide accurate and complete information when creating an account.', 'vitalpeptides' ) ),
-	array( 'title' => __( 'Orders & Payments', 'vitalpeptides' ), 'content' => __( 'All orders are subject to acceptance and product availability. Prices are listed in USD and may change without notice. Payment must be received in full before orders are processed and shipped.', 'vitalpeptides' ) ),
-	array( 'title' => __( 'Shipping & Delivery', 'vitalpeptides' ), 'content' => __( 'We aim to ship all orders placed before 2PM EST on the same business day. Delivery times vary based on location and shipping method selected. Vital Peptides is not responsible for delays caused by carriers.', 'vitalpeptides' ) ),
-	array( 'title' => __( 'Returns & Refunds', 'vitalpeptides' ), 'content' => __( 'We accept returns of unopened, undamaged products within 30 days of delivery. Refunds are processed to the original payment method within 5-10 business days. Custom or bulk orders may not be eligible for return.', 'vitalpeptides' ) ),
-	array( 'title' => __( 'Intellectual Property', 'vitalpeptides' ), 'content' => __( 'All content on our website, including text, images, logos, and design, is the property of Vital Peptides and is protected by intellectual property laws. Unauthorized use is prohibited.', 'vitalpeptides' ) ),
-	array( 'title' => __( 'Limitation of Liability', 'vitalpeptides' ), 'content' => __( 'Vital Peptides shall not be liable for any indirect, incidental, or consequential damages arising from the use of our products or services. Our liability is limited to the purchase price of the products.', 'vitalpeptides' ) ),
-	array(
-    'title'   => __( 'Contact', 'vitalpeptides' ),
-    'content' => sprintf(
-        __( 'For questions regarding these terms, contact us at %s.', 'vitalpeptides' ),
-        '<a href="mailto:support@vitalpeptidesciences.com">support@vitalpeptidesciences.com</a>'
-    ),
-),
-);
+if ( is_string( $vp_terms_document ) && preg_match( '/<main\\b[^>]*>.*?<\\/main>/is', $vp_terms_document, $vp_terms_match ) ) {
+	$vp_terms_markup = $vp_terms_match[0];
+}
 ?>
 
-<section class="vp-page-body">
-	<div class="vp-container-narrow">
-		<div class="vp-prose-sections">
-			<?php foreach ( $vp_sections as $vp_section ) : ?>
-				<div class="vp-prose-section">
-					<h2><?php echo esc_html( $vp_section['title'] ); ?></h2>
-					<p><?php echo wp_kses_post( $vp_section['content'] ); ?></p>
-				</div>
-			<?php endforeach; ?>
+<section class="vp-retriever-terms" aria-label="<?php esc_attr_e( 'Terms and Conditions', 'vitalpeptides' ); ?>">
+	<?php if ( $vp_terms_markup ) : ?>
+		<?php echo $vp_terms_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted, theme-maintained legal source. ?>
+	<?php else : ?>
+		<div class="wrap">
+			<p><?php esc_html_e( 'The Terms and Conditions document is temporarily unavailable. Please contact us for assistance.', 'vitalpeptides' ); ?></p>
 		</div>
-	</div>
+	<?php endif; ?>
 </section>
 
 <?php get_footer(); ?>
